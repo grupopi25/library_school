@@ -6,13 +6,13 @@ class HeaderAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60, // altura fixa
+      height: 60, 
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Barra de pesquisa
+         
           Expanded(
             child: Row(
               children: [
@@ -43,9 +43,7 @@ class HeaderAdmin extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 16), // espaçamento entre search e perfil
-
-          // Notificações e perfil
+          const SizedBox(width: 16), 
           Row(
             children: [
               IconButton(
