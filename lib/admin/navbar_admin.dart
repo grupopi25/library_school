@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_school/admin/header_admin.dart';
 import 'package:library_school/admin/home_page_admin.dart';
+import 'package:library_school/admin/livros_admin.dart';
 
 class NavbarAdmin extends StatefulWidget {
   const NavbarAdmin({super.key});
@@ -14,7 +15,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
 
   final List<Widget> pages = [
     HomePageAdmin(),
-    Center(child: Text('Página Livros', style: TextStyle(fontSize: 24))),
+    LivrosAdmin(),
     Center(child: Text('Página Aluno', style: TextStyle(fontSize: 24))),
     Center(child: Text('Página Empréstimos', style: TextStyle(fontSize: 24))),
     Center(child: Text('Página Relatórios', style: TextStyle(fontSize: 24))),
