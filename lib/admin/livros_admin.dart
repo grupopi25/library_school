@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:library_school/admin/cadastrar_livros.dart';
 
 class LivrosAdmin extends StatefulWidget {
   const LivrosAdmin({super.key});
@@ -29,7 +30,9 @@ class _LivrosAdminState extends State<LivrosAdmin> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+        //  header
           Row(
+            
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
@@ -54,35 +57,40 @@ class _LivrosAdminState extends State<LivrosAdmin> {
                 ],
               ),
 
-              // Botão
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xff004AC6), Color(0xff2563EB)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+              // Botão Cadastro
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CadastrarLivros()));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xff004AC6), Color(0xff2563EB)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.add, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        "Adicionar Livros",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.add, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          "Adicionar Livros",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -94,7 +102,7 @@ class _LivrosAdminState extends State<LivrosAdmin> {
           // Campo de busca
           Row(
             children: [
-              // 🔍 Campo de busca
+              
               Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
