@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:library_school/admin/emprestimos_livros_admin.dart';
 import 'package:library_school/admin/header_admin.dart';
 import 'package:library_school/admin/home_page_admin.dart';
 import 'package:library_school/admin/livros_admin.dart';
@@ -17,7 +18,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     HomePageAdmin(),
     LivrosAdmin(),
     Center(child: Text('Página Aluno', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Página Empréstimos', style: TextStyle(fontSize: 24))),
+    EmprestimosLivrosAdmin(),
     Center(child: Text('Página Relatórios', style: TextStyle(fontSize: 24))),
   ];
 
