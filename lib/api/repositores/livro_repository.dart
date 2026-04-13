@@ -42,4 +42,14 @@ Future<List<LivroModel>> findFiltrar(String nome, String? categoria, String? sta
   );
   return (res.data as List).map((t) => LivroModel.fromMap(t)).toList();
 }
+
+Future<List<LivroModel>> findAllNoPagination() async {
+  var dio = CustomDio.withAuthentication().instance;
+
+  final res = await dio.get('http://localhost:8081/livros-todos');
+
+  return (res.data as List)
+      .map((t) => LivroModel.fromMap(t))
+      .toList();
+}
 }

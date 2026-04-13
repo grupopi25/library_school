@@ -1,9 +1,16 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/material.dart';
 import 'package:library_school/admin/cadastrar_livros.dart';
 import 'package:library_school/api/models/livro_model.dart';
 import 'package:library_school/api/repositores/livro_repository.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+
+
 
 class LivrosAdmin extends StatefulWidget {
   const LivrosAdmin({super.key});
@@ -27,8 +34,66 @@ class _LivrosAdminState extends State<LivrosAdmin> {
 
 
 
+// livros: lista de LivroModel que você já tem
 
 
+Future<void> exportarPdf(List<LivroModel> livros) async {
+  final pdf = pw.Document();
+
+  final fontData =
+      await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+  final ttf = pw.Font.ttf(fontData);
+
+  pdf.addPage(
+    pw.MultiPage(
+      build: (context) => [
+        pw.Text(
+          'Catálogo de Livros',
+          style: pw.TextStyle(font: ttf, fontSize: 24),
+        ),
+
+        pw.SizedBox(height: 20),
+
+        pw.TableHelper.fromTextArray(
+          headers: [
+            'Título',
+            'Autor',
+            'Categoria',
+            'Tombo',
+            'ISBN',
+            'Status'
+          ],
+          data: livros.map((l) {
+            return [
+              l.titulo,
+              l.autor,
+              l.categoria,
+              l.tombo.toString(),
+              l.isbn,
+              l.status ? "Disponível" : "Emprestado",
+            ];
+          }).toList(),
+          headerStyle: pw.TextStyle(font: ttf),
+          cellStyle: pw.TextStyle(font: ttf),
+        ),
+      ],
+    ),
+  );
+
+  final bytes = await pdf.save();
+
+  // 🔥 SALVAR NO DISPOSITIVO
+  final output = await getApplicationDocumentsDirectory();
+  final file = File("${output.path}/catalogo_livros.pdf");
+
+  await file.writeAsBytes(bytes);
+
+  // 📥 DOWNLOAD / COMPARTILHAR
+  await Printing.sharePdf(
+    bytes: bytes,
+    filename: "catalogo_livros.pdf",
+  );
+}
 
 
   
@@ -346,40 +411,41 @@ setState(() {
     const SizedBox(width: 10),
 
     // 📤 EXPORTAR
-    Expanded(
-      child: InkWell(
-        onTap: () {
-          // futura implementação exportar
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xffE7E8EA),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Padding(
-            padding: EdgeInsets.all(18.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.file_download_outlined,
-                  color: Color(0xff191C1E),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  'Exportar',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff191C1E),
-                  ),
-                ),
-              ],
+   Expanded(
+  child: InkWell(
+    onTap: () async {
+  final todos = await repo.findAllNoPagination();
+  await exportarPdf(todos);
+},
+    child: Container(
+      decoration: BoxDecoration(
+        color: const Color(0xffE7E8EA),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(18.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.file_download_outlined,
+              color: Color(0xff191C1E),
             ),
-          ),
+            SizedBox(width: 8),
+            Text(
+              'Exportar',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff191C1E),
+              ),
+            ),
+          ],
         ),
       ),
     ),
+  ),
+),
   ],
 ),
 

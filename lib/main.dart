@@ -6,19 +6,28 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const primaryColor = Color(0x7EE2E8F0);
-
   const MyApp({super.key});
+
+  static const primaryColor = Color(0xFFE2E8F0);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Library School',
+      debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+        useMaterial3: true,
+        fontFamily: 'Roboto', // 🔥 GLOBAL FONT
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+        ),
+        iconTheme: const IconThemeData(
+          size: 24,
+        ),
       ),
-      home: NavbarAdmin(),
-      
+
+      home: const NavbarAdmin(),
     );
   }
 }
