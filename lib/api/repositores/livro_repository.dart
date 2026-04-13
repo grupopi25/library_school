@@ -30,15 +30,16 @@ class LivroRepository {
     );
   }
 
-  Future<List<LivroModel>> findFiltrar(String nome) async {
-    var dio = CustomDio.withAuthentication().instance;
-
-    final res = await dio.get(
-      'http://localhost:8081/livros/filtrar?nome=$nome',
-    );
-
-    return (res.data as List)
-        .map((t) => LivroModel.fromMap(t))
-        .toList();
-  }
+Future<List<LivroModel>> findFiltrar(String nome, String? categoria, String? status) async {
+  var dio = CustomDio.withAuthentication().instance;
+  final res = await dio.get(
+    'http://localhost:8081/pesquisar-livro',
+    queryParameters: {
+      'nome': nome,
+      'categoria': categoria,
+      'status': status,
+    },
+  );
+  return (res.data as List).map((t) => LivroModel.fromMap(t)).toList();
+}
 }
