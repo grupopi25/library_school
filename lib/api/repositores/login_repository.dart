@@ -5,7 +5,7 @@ class LoginRepository {
   login(){
     var dio = CustomDio().instance;
 
-    dio.post('http://localhost:8081/login',data: {
+    dio.post('http://localhost:8081/auth/login',data: {
       'username': 'eduardo',
       'password':123
     }).then((res) async {

@@ -18,14 +18,14 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         useMaterial3: true,
-        fontFamily: 'Roboto', // 🔥 GLOBAL FONT
+        fontFamily: 'Roboto', 
         colorScheme: ColorScheme.fromSeed(
           seedColor: primaryColor,
         ),
         iconTheme: const IconThemeData(
           size: 24,
         ),
-      ),
+      ),  
 
       home: const NavbarAdmin(),
     );

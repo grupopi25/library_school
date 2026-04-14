@@ -43,7 +43,7 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
               if (constraints.maxWidth < 600) {
                 crossAxisCount = 1; // Mobile
               } else if (constraints.maxWidth < 1024) {
-                crossAxisCount = 2; // Tablet
+                crossAxisCount = 2; 
               }
 
               return GridView(

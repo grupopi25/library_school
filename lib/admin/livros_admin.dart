@@ -10,8 +10,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-
-
 class LivrosAdmin extends StatefulWidget {
   const LivrosAdmin({super.key});
 
@@ -21,7 +19,7 @@ class LivrosAdmin extends StatefulWidget {
 
 class _LivrosAdminState extends State<LivrosAdmin> {
   final TextEditingController buscaController = TextEditingController();
-  
+
   int currentPage = 1;
   int totalPages = 1;
   final repo = LivroRepository();
@@ -31,72 +29,61 @@ class _LivrosAdminState extends State<LivrosAdmin> {
   Timer? timer;
   late IO.Socket socket;
 
+  // livros: lista de LivroModel que você já tem
 
+  Future<void> exportarPdf(List<LivroModel> livros) async {
+    final pdf = pw.Document();
 
+    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+    final ttf = pw.Font.ttf(fontData);
 
-// livros: lista de LivroModel que você já tem
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Text(
+            'Catálogo de Livros',
+            style: pw.TextStyle(font: ttf, fontSize: 24),
+          ),
 
+          pw.SizedBox(height: 20),
 
-Future<void> exportarPdf(List<LivroModel> livros) async {
-  final pdf = pw.Document();
+          pw.TableHelper.fromTextArray(
+            headers: [
+              'Título',
+              'Autor',
+              'Categoria',
+              'Tombo',
+              'ISBN',
+              'Status',
+            ],
+            data: livros.map((l) {
+              return [
+                l.titulo,
+                l.autor,
+                l.categoria,
+                l.tombo.toString(),
+                l.isbn,
+                l.status ? "Disponível" : "Emprestado",
+              ];
+            }).toList(),
+            headerStyle: pw.TextStyle(font: ttf),
+            cellStyle: pw.TextStyle(font: ttf),
+          ),
+        ],
+      ),
+    );
 
-  final fontData =
-      await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-  final ttf = pw.Font.ttf(fontData);
+    final bytes = await pdf.save();
 
-  pdf.addPage(
-    pw.MultiPage(
-      build: (context) => [
-        pw.Text(
-          'Catálogo de Livros',
-          style: pw.TextStyle(font: ttf, fontSize: 24),
-        ),
+    // SALVAR NO DISPOSITIVO
+    final output = await getApplicationDocumentsDirectory();
+    final file = File("${output.path}/catalogo_livros.pdf");
 
-        pw.SizedBox(height: 20),
+    await file.writeAsBytes(bytes);
 
-        pw.TableHelper.fromTextArray(
-          headers: [
-            'Título',
-            'Autor',
-            'Categoria',
-            'Tombo',
-            'ISBN',
-            'Status'
-          ],
-          data: livros.map((l) {
-            return [
-              l.titulo,
-              l.autor,
-              l.categoria,
-              l.tombo.toString(),
-              l.isbn,
-              l.status ? "Disponível" : "Emprestado",
-            ];
-          }).toList(),
-          headerStyle: pw.TextStyle(font: ttf),
-          cellStyle: pw.TextStyle(font: ttf),
-        ),
-      ],
-    ),
-  );
-
-  final bytes = await pdf.save();
-
-  // 🔥 SALVAR NO DISPOSITIVO
-  final output = await getApplicationDocumentsDirectory();
-  final file = File("${output.path}/catalogo_livros.pdf");
-
-  await file.writeAsBytes(bytes);
-
-  // 📥 DOWNLOAD / COMPARTILHAR
-  await Printing.sharePdf(
-    bytes: bytes,
-    filename: "catalogo_livros.pdf",
-  );
-}
-
-
-  
+    // 📥 DOWNLOAD / COMPARTILHAR
+    await Printing.sharePdf(bytes: bytes, filename: "catalogo_livros.pdf");
+  }
 
   @override
   void initState() {
@@ -128,53 +115,57 @@ Future<void> exportarPdf(List<LivroModel> livros) async {
     super.dispose();
   }
 
-bool pesquisando = false;
-void aplicarFiltros() async {
-  final busca = buscaController.text;
+  bool pesquisando = false;
+  void aplicarFiltros() async {
+    final busca = buscaController.text;
 
-  // se tiver qualquer filtro ativo → modo pesquisa
-  if (busca.isNotEmpty ||
-      categoriaSelecionada != null ||
-      disponibilidadeSelecionada != null) {
-    
-    pesquisando = true;
+    // se tiver qualquer filtro ativo → modo pesquisa
+    if (busca.isNotEmpty ||
+        categoriaSelecionada != null ||
+        disponibilidadeSelecionada != null) {
+      pesquisando = true;
 
-    final resultado = await repo.findFiltrar(
-  buscaController.text,
-  categoriaSelecionada,
-  disponibilidadeSelecionada,
-);
-setState(() {
-  livros = resultado;
-});
+      final resultado = await repo.findFiltrar(
+        buscaController.text,
+        categoriaSelecionada,
+        disponibilidadeSelecionada,
+      );
+      setState(() {
+        livros = resultado;
+      });
 
-    // FILTRO LOCAL (categoria + status)
-   final filtrado = resultado.where((livro) {
-  final categoriaSelecionadaNormalizada = categoriaSelecionada?.trim().toLowerCase();
-  final matchCategoria = categoriaSelecionadaNormalizada == null ||
-      categoriaSelecionadaNormalizada == 'todas as categorias' ||
-      livro.categoria.toLowerCase() == categoriaSelecionadaNormalizada;
+      // FILTRO LOCAL (categoria + status)
+      final filtrado = resultado.where((livro) {
+        final categoriaSelecionadaNormalizada = categoriaSelecionada
+            ?.trim()
+            .toLowerCase();
+        final matchCategoria =
+            categoriaSelecionadaNormalizada == null ||
+            categoriaSelecionadaNormalizada == 'todas as categorias' ||
+            livro.categoria.toLowerCase() == categoriaSelecionadaNormalizada;
 
-  final disponibilidadeNormalizada = disponibilidadeSelecionada?.trim().toLowerCase();
-  final matchStatus = disponibilidadeNormalizada == null ||
-      disponibilidadeNormalizada == 'disponibilidade' ||
-      (disponibilidadeNormalizada == 'disponivel' && livro.status) ||
-      (disponibilidadeNormalizada == 'emprestado' && !livro.status);
+        final disponibilidadeNormalizada = disponibilidadeSelecionada
+            ?.trim()
+            .toLowerCase();
+        final matchStatus =
+            disponibilidadeNormalizada == null ||
+            disponibilidadeNormalizada == 'disponibilidade' ||
+            (disponibilidadeNormalizada == 'disponivel' && livro.status) ||
+            (disponibilidadeNormalizada == 'emprestado' && !livro.status);
 
-  return matchCategoria && matchStatus;
-}).toList();
+        return matchCategoria && matchStatus;
+      }).toList();
 
-    setState(() {
-      livros = filtrado;
-    });
-
-  } else {
-    // sem filtro → volta paginação normal
-    pesquisando = false;
-    currentPage = 1;
-    carregarLivros();
+      setState(() {
+        livros = filtrado;
+      });
+    } else {
+      // sem filtro → volta paginação normal
+      pesquisando = false;
+      currentPage = 1;
+      carregarLivros();
+    }
   }
-}
 
   void mudarPagina(int novaPagina) {
     if (novaPagina < 1 || novaPagina > totalPages) return;
@@ -194,7 +185,7 @@ setState(() {
     final response = await repo.findAll(currentPage);
 
     setState(() {
-      livros = response.livros; // substitui lista (não acumula)
+      livros = response.livros; 
       totalPages = response.totalPages;
       loading = false;
     });
@@ -293,9 +284,9 @@ setState(() {
           const SizedBox(height: 40),
 
           // Campo de busca
-        Row(
+         Row(
   children: [
-    // 🔎 BUSCA
+    //  BUSCA
     Expanded(
       child: TextFormField(
         controller: buscaController,
@@ -308,7 +299,6 @@ setState(() {
             vertical: 10,
           ),
           prefixIcon: const Icon(Icons.search),
-          // BOTÃO LIMPAR
           suffixIcon: buscaController.text.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.close),
@@ -325,9 +315,6 @@ setState(() {
 
     const SizedBox(width: 10),
 
-   
-
-    // DIVISOR
     Container(
       width: 1,
       height: 24,
@@ -335,66 +322,68 @@ setState(() {
       color: const Color.fromARGB(75, 158, 158, 158),
     ),
 
-    // 📂 CATEGORIA
-    Flexible(
-  child: DropdownButtonHideUnderline(
-    child: DropdownButton<String>(
-      isExpanded: true, // permite que ocupe todo o espaço disponível
-      focusColor: Colors.transparent,
-      value: categoriaSelecionada,
-      hint: const Text('Todas Categorias'),
-      icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-      items: categorias.map((categoria) {
-        return DropdownMenuItem<String>(
-          value: categoria,
-          child: Text(
-            categoria,
-            overflow: TextOverflow.ellipsis, // evita overflow de texto longo
-          ),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          categoriaSelecionada = value;
-        });
-        aplicarFiltros();
-      },
-    ),
-  ),
-),
-
-    // DIVISOR
-    Container(
-      width: 1,
-      height: 24,
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      color: const Color.fromARGB(75, 158, 158, 158),
-    ),
-
-    // 📊 DISPONIBILIDADE
-    DropdownButton<String>(
-      focusColor: Colors.transparent,
-      value: disponibilidadeSelecionada,
-      hint: const Text('Disponibilidade'),
-      underline: const SizedBox(),
-      icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-      items: disponivel.map((item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          disponibilidadeSelecionada = value;
-        });
-        aplicarFiltros();
-      },
+    // CATEGORIA
+    SizedBox(
+      width: 180,
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: categoriaSelecionada,
+          hint: const Text('Categorias'),
+          items: categorias.map((categoria) {
+            return DropdownMenuItem(
+              value: categoria,
+              child: Text(
+                categoria,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              categoriaSelecionada = value;
+            });
+            aplicarFiltros();
+          },
+        ),
+      ),
     ),
 
     const SizedBox(width: 10),
 
-    // 🧹 LIMPAR FILTROS
+    Container(
+      width: 1,
+      height: 24,
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      color: const Color.fromARGB(75, 158, 158, 158),
+    ),
+
+    //  DISPONIBILIDADE
+    SizedBox(
+      width: 160,
+      child: DropdownButton<String>(
+        isExpanded: true,
+        value: disponibilidadeSelecionada,
+        hint: const Text('Status'),
+        underline: const SizedBox(),
+        items: disponivel.map((item) {
+          return DropdownMenuItem(
+            value: item,
+            child: Text(item),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            disponibilidadeSelecionada = value;
+          });
+          aplicarFiltros();
+        },
+      ),
+    ),
+
+    const SizedBox(width: 10),
+
+    //  LIMPAR
     IconButton(
       tooltip: "Limpar filtros",
       icon: const Icon(Icons.refresh, color: Colors.grey),
@@ -410,27 +399,22 @@ setState(() {
 
     const SizedBox(width: 10),
 
-    // 📤 EXPORTAR
-   Expanded(
-  child: InkWell(
-    onTap: () async {
-  final todos = await repo.findAllNoPagination();
-  await exportarPdf(todos);
-},
-    child: Container(
-      decoration: BoxDecoration(
-        color: const Color(0xffE7E8EA),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: const Padding(
-        padding: EdgeInsets.all(18.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    //  EXPORTAR 
+    InkWell(
+      onTap: () async {
+        final todos = await repo.findAllNoPagination();
+        await exportarPdf(todos);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xffE7E8EA),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Row(
           children: [
-            Icon(
-              Icons.file_download_outlined,
-              color: Color(0xff191C1E),
-            ),
+            Icon(Icons.file_download_outlined,
+                color: Color(0xff191C1E)),
             SizedBox(width: 8),
             Text(
               'Exportar',
@@ -444,23 +428,13 @@ setState(() {
         ),
       ),
     ),
-  ),
-),
   ],
 ),
 
-
-
-
-
-
-
-          
           // TABELA DE LIVROS
           SizedBox(height: 20),
-          
 
-      Expanded(
+         Expanded(
   child: Container(
     width: double.infinity,
     height: double.infinity,
@@ -476,137 +450,114 @@ setState(() {
       ],
     ),
     child: ListView.builder(
-      itemCount: livros.length + 1, // +1 para header
+      itemCount: livros.length + 1,
       itemBuilder: (context, index) {
-        // HEADER FIXO
+        
+        // ================= HEADER =================
         if (index == 0) {
           return Container(
             color: const Color(0xff374151),
             padding: const EdgeInsets.symmetric(vertical: 14),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: const [
-                  SizedBox(
-                    width: 80,
-                    child: Text(
-                      "Capa",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: Text(
-                      "Título & Autor",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      "Categoria",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 80,
-                    child: Text(
-                      "Tombo",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      "ISBN",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      "Status",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      "Ações",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text("Capa",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text("Título & Autor",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Categoria",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text("Tombo",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("ISBN",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Status",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Ações",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ),
           );
         }
 
         final livro = livros[index - 1];
 
+        // ================= LINHA =================
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: index % 2 == 0 ? const Color(0xffF9FAFB) : Colors.white,
+            color: index % 2 == 0
+                ? const Color(0xffF9FAFB)
+                : Colors.white,
             border: const Border(
               bottom: BorderSide(color: Color(0xffE5E7EB)),
             ),
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                // CAPA
-                SizedBox(
-                  width: 80,
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: const Color(0xffE5E7EB),
-                      ),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: (livro.capa?.isNotEmpty ?? false)
-                        ? Image.network(
-                            "http://localhost:8081/uploads/${livro.capa}",
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.book,
-                                  color: Color(0xff9CA3AF),
-                                  size: 28,
-                                ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Icon(
-                              Icons.book,
-                              color: Color(0xff9CA3AF),
-                              size: 28,
-                            ),
-                          ),
-                  ),
+          child: Row(
+            children: [
+              
+              // CAPA
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: (livro.capa?.isNotEmpty ?? false)
+                      ? Image.network(
+                          "http://localhost:8081/uploads/${livro.capa}",
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.book,
+                                color: Color(0xff9CA3AF));
+                          },
+                        )
+                      : const Icon(Icons.book,
+                          color: Color(0xff9CA3AF)),
                 ),
+              ),
 
-                // TITULO + AUTOR
-                SizedBox(
-                  width: 200,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+              // TITULO + AUTOR
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
                         livro.titulo,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      Text(
+                    ),
+                    Center(
+                      child: Text(
                         livro.autor,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -614,17 +565,39 @@ setState(() {
                           color: Color(0xff6B7280),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
 
-                SizedBox(width: 120, child: Text(livro.categoria)),
-                SizedBox(width: 80, child: Text(livro.tombo.toString())),
-                SizedBox(width: 120, child: Text(livro.isbn)),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  livro.categoria,
+                  textAlign: TextAlign.center,
+                ),
+              ),
 
-                // STATUS
-                SizedBox(
-                  width: 120,
+              Expanded(
+                flex: 1,
+                child: Text(
+                  livro.tombo.toString(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              Expanded(
+                flex: 2,
+                child: Text(
+                  livro.isbn,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              // STATUS
+              Expanded(
+                flex: 2,
+                child: Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -638,7 +611,6 @@ setState(() {
                     ),
                     child: Text(
                       livro.status ? "Disponível" : "Emprestado",
-                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: livro.status
                             ? const Color(0xff16A34A)
@@ -649,40 +621,34 @@ setState(() {
                     ),
                   ),
                 ),
+              ),
 
-                // AÇÕES
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.visibility,
-                          color: Color(0xff2563EB),
-                        ),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Color(0xff6B7280),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+              // AÇÕES
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.visibility,
+                          color: Color(0xff2563EB)),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit,
+                          color: Color(0xff6B7280)),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
     ),
   ),
 ),
-
-
-
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),

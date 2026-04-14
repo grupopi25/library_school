@@ -18,7 +18,7 @@ class LivroRepository {
     var dio = CustomDio.withAuthentication().instance;
 
     final res = await dio.get(
-      'http://localhost:8081/livros?page=$page&limit=5',
+      'http://localhost:8081/livros/livros?page=$page&limit=5',
     );
 
     return LivroResponse(
@@ -33,7 +33,7 @@ class LivroRepository {
 Future<List<LivroModel>> findFiltrar(String nome, String? categoria, String? status) async {
   var dio = CustomDio.withAuthentication().instance;
   final res = await dio.get(
-    'http://localhost:8081/pesquisar-livro',
+    'http://localhost:8081/livros/pesquisar-livro',
     queryParameters: {
       'nome': nome,
       'categoria': categoria,
@@ -46,7 +46,7 @@ Future<List<LivroModel>> findFiltrar(String nome, String? categoria, String? sta
 Future<List<LivroModel>> findAllNoPagination() async {
   var dio = CustomDio.withAuthentication().instance;
 
-  final res = await dio.get('http://localhost:8081/livros-todos');
+  final res = await dio.get('http://localhost:8081/livros/livros-todos');
 
   return (res.data as List)
       .map((t) => LivroModel.fromMap(t))

@@ -1,5 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:library_school/services/livros_service.dart';
 
 class CadastrarLivros extends StatefulWidget {
   const CadastrarLivros({super.key});
@@ -9,6 +11,30 @@ class CadastrarLivros extends StatefulWidget {
 }
 
 class _CadastrarLivrosState extends State<CadastrarLivros> {
+  // constrolles
+  final tituloController = TextEditingController();
+  final autorController = TextEditingController();
+  final categoriaController = TextEditingController();
+  final tomboController = TextEditingController();
+  final isbnController = TextEditingController();
+  final descricaoController = TextEditingController();
+  final livrosService = LivrosService();
+
+  // funcao salvar imagem
+  String? selectedImagePath;
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        selectedImagePath = image.path;
+      });
+    }
+  }
+
+  DateTime? dataSelecionada;
   final List<String> categoriasCadastro = [
     'Todas as Categorias',
     'Romance',
@@ -17,6 +43,7 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
   ];
 
   String? categoriaSelecionada;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,31 +96,41 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                       ),
                       SizedBox(height: 10),
                       // UPLOAD DE IMAGENS
-                      DottedBorder(
-                        color: Colors.grey.shade400,
-                        strokeWidth: 2,
-                        dashPattern: const [6, 4],
-                        borderType: BorderType.RRect,
-                        radius: const Radius.circular(12),
-                        child: Container(
-                          width: double.infinity,
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: DottedBorder(
+                          color: Colors.grey.shade400,
+                          strokeWidth: 2,
+                          dashPattern: const [6, 4],
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(12),
 
-                          padding: const EdgeInsets.all(16),
-                          // camera
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.cloud_upload_outlined),
-                              SizedBox(height: 8),
-                              Text('Capa do Livro'),
-                              SizedBox(height: 4),
-                              Text(
-                                'PNG, JPG até 10MB (Proporção 3:4 recomendada)',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.cloud_upload_outlined),
+                                const SizedBox(height: 8),
+
+                                Text(
+                                  selectedImagePath == null
+                                      ? 'Toque para selecionar a capa'
+                                      : 'Imagem selecionada',
+                                ),
+
+                                const SizedBox(height: 4),
+
+                                const Text(
+                                  'PNG, JPG até 10MB (Proporção 3:4 recomendada)',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -125,6 +162,7 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                           color: Color(0x1D8C8D91),
                         ),
                         child: TextFormField(
+                          controller: tituloController,
                           decoration: InputDecoration(
                             hintText: 'Ex: O Pequeno Príncipe',
                             border: InputBorder.none,
@@ -158,6 +196,7 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                     color: Color(0x1D8C8D91),
                                   ),
                                   child: TextFormField(
+                                    controller: autorController,
                                     decoration: InputDecoration(
                                       hintText: 'Ex: Romance',
                                       border: InputBorder.none,
@@ -198,7 +237,7 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                     hint: const Text('Todas Categorias'),
 
                                     isExpanded:
-                                        true, // 🔥 faz ocupar toda largura
+                                        true, 
 
                                     underline: const SizedBox(),
 
@@ -269,8 +308,10 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                     color: Color(0x1D8C8D91),
                                   ),
                                   child: TextFormField(
+                                    controller: tomboController,
                                     decoration: InputDecoration(
                                       hintText: '123456789',
+
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.all(12),
                                     ),
@@ -298,18 +339,20 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
 
                                 GestureDetector(
                                   onTap: () async {
-                                    DateTime? dataSelecionada =
-                                        await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(1900),
-                                          lastDate: DateTime(2100),
-                                        );
+                                    DateTime? data = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(1900),
+                                      lastDate: DateTime(2100),
+                                    );
 
-                                    if (dataSelecionada != null) {
-                                      print(dataSelecionada);
+                                    if (data != null) {
+                                      setState(() {
+                                        dataSelecionada = data;
+                                      });
                                     }
                                   },
+
                                   child: Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(12),
@@ -317,9 +360,17 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: const Color(0x1D8C8D91),
                                     ),
-                                    child: const Text(
-                                      "Selecionar data",
-                                      style: TextStyle(color: Colors.black54),
+
+                                    child: Text(
+                                      dataSelecionada == null
+                                          ? "Selecionar data"
+                                          : "${dataSelecionada!.day.toString().padLeft(2, '0')}/"
+                                                "${dataSelecionada!.month.toString().padLeft(2, '0')}/"
+                                                "${dataSelecionada!.year}",
+
+                                      style: const TextStyle(
+                                        color: Colors.black54,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -353,8 +404,25 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                       color: Color(0x1D8C8D91),
                                     ),
                                     child: TextFormField(
+                                      controller: isbnController,
                                       decoration: InputDecoration(
                                         hintText: '978-3-16-148410-0',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(12),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  // descricao
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color(0x1D8C8D91),
+                                    ),
+                                    child: TextFormField(
+                                      controller: descricaoController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Ex: Esse livro é do autor x',
                                         border: InputBorder.none,
                                         contentPadding: EdgeInsets.all(12),
                                       ),
@@ -448,6 +516,77 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                           ),
                           Expanded(
                             child: InkWell(
+                              onTap: isLoading
+                                  ? null
+                                  : () async {
+                                      //  validação
+                                      if (tituloController.text.isEmpty ||
+                                          autorController.text.isEmpty ||
+                                          isbnController.text.isEmpty) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Preencha todos os campos obrigatórios",
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+
+                                      try {
+                                        await livrosService.cadastrarLivro(
+                                          titulo: tituloController.text,
+                                          autor: autorController.text,
+                                          categoria: categoriaSelecionada ?? "",
+                                          tombo: tomboController.text,
+                                          isbn: isbnController.text,
+                                          descricao: descricaoController.text,
+                                          imagePath: selectedImagePath!,
+                                        );
+
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 800),
+                                        );
+
+                                        //  LIMPAR CAMPOS
+                                        tituloController.clear();
+                                        autorController.clear();
+                                        isbnController.clear();
+                                        tomboController.clear();
+                                        descricaoController.clear();
+
+                                        setState(() {
+                                          selectedImagePath = null;
+                                          categoriaSelecionada = null;
+                                        });
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Livro cadastrado com sucesso!",
+                                            ),
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(content: Text("Erro: $e")),
+                                        );
+                                      }
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    },
+
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
@@ -456,22 +595,27 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                       Color(0xff004AC6),
                                       Color(0xff2563EB),
                                     ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Salvar",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                padding: const EdgeInsets.all(18),
+                                child: Center(
+                                  child: isLoading
+                                      ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Salvar",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),
