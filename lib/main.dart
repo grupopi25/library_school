@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:library_school/admin/navbar_admin.dart';
+import 'package:library_school/usuario/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         ),
       ),  
 
-      home: const NavbarAdmin(),
+      home: const 
+      NavbarAdmin()
     );
   }
 }

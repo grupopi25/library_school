@@ -5,11 +5,19 @@ class CustomDio {
   late Dio _dio;
 
   CustomDio() {
-    _dio = Dio();
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: "http://localhost:8081",
+      ),
+    );
   }
 
   CustomDio.withAuthentication() {
-    _dio = Dio();
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: "http://localhost:8081",
+      ),
+    );
 
     _dio.interceptors.add(
       InterceptorsWrapper(

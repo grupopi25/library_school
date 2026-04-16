@@ -6,13 +6,12 @@ class HeaderAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60, 
+      height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-         
           Expanded(
             child: Row(
               children: [
@@ -24,18 +23,17 @@ class HeaderAdmin extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Pesquisar...',
                       hintStyle: TextStyle(color: Color(0xff6B7280)),
-                    
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
-                        
-
-                        
                       ),
-                      
+
                       fillColor: Colors.grey[200],
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
                   ),
                 ),
@@ -43,7 +41,7 @@ class HeaderAdmin extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 16), 
+          const SizedBox(width: 16),
           Row(
             children: [
               IconButton(
@@ -56,9 +54,17 @@ class HeaderAdmin extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: const [
-                  Text('Admin', style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff191C1E))),
-                  Text('User',
-                      style: TextStyle(fontSize: 12, color: Color(0xff64748B))),
+                  Text(
+                    'Admin',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff191C1E),
+                    ),
+                  ),
+                  Text(
+                    'User',
+                    style: TextStyle(fontSize: 12, color: Color(0xff64748B)),
+                  ),
                 ],
               ),
               const SizedBox(width: 8),

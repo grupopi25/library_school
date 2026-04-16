@@ -18,7 +18,7 @@ class LivroRepository {
     var dio = CustomDio.withAuthentication().instance;
 
     final res = await dio.get(
-      'http://localhost:8081/livros/livros?page=$page&limit=5',
+      '/livros/livros?page=$page&limit=5',
     );
 
     return LivroResponse(
@@ -30,26 +30,34 @@ class LivroRepository {
     );
   }
 
-Future<List<LivroModel>> findFiltrar(String nome, String? categoria, String? status) async {
-  var dio = CustomDio.withAuthentication().instance;
-  final res = await dio.get(
-    'http://localhost:8081/livros/pesquisar-livro',
-    queryParameters: {
-      'nome': nome,
-      'categoria': categoria,
-      'status': status,
-    },
-  );
-  return (res.data as List).map((t) => LivroModel.fromMap(t)).toList();
-}
+  Future<List<LivroModel>> findFiltrar(
+    String nome,
+    String? categoria,
+    String? status,
+  ) async {
+    var dio = CustomDio.withAuthentication().instance;
 
-Future<List<LivroModel>> findAllNoPagination() async {
-  var dio = CustomDio.withAuthentication().instance;
+    final res = await dio.get(
+      '/livros/pesquisar-livro',
+      queryParameters: {
+        'nome': nome,
+        'categoria': categoria,
+        'status': status,
+      },
+    );
 
-  final res = await dio.get('http://localhost:8081/livros/livros-todos');
+    return (res.data as List)
+        .map((t) => LivroModel.fromMap(t))
+        .toList();
+  }
 
-  return (res.data as List)
-      .map((t) => LivroModel.fromMap(t))
-      .toList();
-}
+  Future<List<LivroModel>> findAllNoPagination() async {
+    var dio = CustomDio.withAuthentication().instance;
+
+    final res = await dio.get('/livros/livros-todos');
+
+    return (res.data as List)
+        .map((t) => LivroModel.fromMap(t))
+        .toList();
+  }
 }

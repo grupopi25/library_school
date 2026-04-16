@@ -1,7 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:library_school/services/livros_service.dart';
+import 'package:library_school/api/services/livros_service.dart';
 
 class CadastrarLivros extends StatefulWidget {
   const CadastrarLivros({super.key});
@@ -236,8 +236,7 @@ class _CadastrarLivrosState extends State<CadastrarLivros> {
                                     value: categoriaSelecionada,
                                     hint: const Text('Todas Categorias'),
 
-                                    isExpanded:
-                                        true, 
+                                    isExpanded: true,
 
                                     underline: const SizedBox(),
 

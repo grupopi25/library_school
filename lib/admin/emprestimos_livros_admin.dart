@@ -8,9 +8,8 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-        
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +42,7 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
               if (constraints.maxWidth < 600) {
                 crossAxisCount = 1; // Mobile
               } else if (constraints.maxWidth < 1024) {
-                crossAxisCount = 2; 
+                crossAxisCount = 2;
               }
 
               return GridView(
@@ -76,7 +75,7 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
                                 color: const Color(0xffEFF6FF),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child:Icon(Icons.check)
+                              child: Icon(Icons.check),
                             ),
                             Container(
                               color: const Color(0xffF0FDF4),
@@ -130,7 +129,10 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: const Color(0xffD4E3FF),
                               ),
-                              child: Icon(Icons.warning_amber_rounded, color: const Color(0xff001C39),)
+                              child: Icon(
+                                Icons.warning_amber_rounded,
+                                color: const Color(0xff001C39),
+                              ),
                             ),
                             Container(
                               color: const Color(0xffF0FDF4),
@@ -188,10 +190,16 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
                                 color: const Color(0xffBA1A1A),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child:Icon(Icons.hourglass_bottom,color: Colors.white,)
+                              child: Icon(
+                                Icons.hourglass_bottom,
+                                color: Colors.white,
+                              ),
                             ),
                             Container(
-                             decoration: BoxDecoration( color: const Color(0xffF0FDF4),borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffF0FDF4),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: const Text(
@@ -248,7 +256,7 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
                                 color: const Color(0xffFFDBCD),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(Icons.today_outlined)
+                              child: Icon(Icons.today_outlined),
                             ),
                             Container(
                               color: const Color.fromARGB(128, 255, 219, 205),
@@ -264,7 +272,7 @@ class EmprestimosLivrosAdmin extends StatelessWidget {
                           ],
                         ),
                         Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text(
                               'Total',

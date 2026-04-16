@@ -40,13 +40,11 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                 children: [
                   Expanded(
                     child: Drawer(
-                      backgroundColor:
-                          Color.fromRGBO(248, 250, 252, 0.8),
+                      backgroundColor: Color.fromRGBO(248, 250, 252, 0.8),
                       child: SingleChildScrollView(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height,
+                            minHeight: MediaQuery.of(context).size.height,
                           ),
                           child: Column(
                             spacing: 5,
@@ -76,11 +74,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                     color: indeceSelecionado == 0
                                         ? Color(0xffE2E8F0)
                                         : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(9),
+                                    borderRadius: BorderRadius.circular(9),
                                   ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -88,27 +84,21 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                           children: [
                                             Image.asset(
                                               'assets/image/icon.png',
-                                              color:
-                                                  indeceSelecionado == 0
-                                                      ? Color(0xff1D4ED8)
-                                                      : Color(0xff64748B),
+                                              color: indeceSelecionado == 0
+                                                  ? Color(0xff1D4ED8)
+                                                  : Color(0xff64748B),
                                             ),
                                             SizedBox(width: 8),
                                             Text(
                                               'Dashboard',
                                               style: TextStyle(
-                                                color:
-                                                    indeceSelecionado ==
-                                                            0
-                                                        ? Color(
-                                                            0xff1D4ED8)
-                                                        : Color(
-                                                            0xff64748B),
+                                                color: indeceSelecionado == 0
+                                                    ? Color(0xff1D4ED8)
+                                                    : Color(0xff64748B),
                                                 fontWeight:
-                                                    indeceSelecionado ==
-                                                            0
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w500,
+                                                    indeceSelecionado == 0
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -118,10 +108,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                       Container(
                                         width: 4,
                                         height: 50,
-                                        color:
-                                            indeceSelecionado == 0
-                                                ? Color(0xff1D4ED8)
-                                                : Colors.transparent,
+                                        color: indeceSelecionado == 0
+                                            ? Color(0xff1D4ED8)
+                                            : Colors.transparent,
                                       ),
                                     ],
                                   ),
@@ -141,11 +130,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                     color: indeceSelecionado == 1
                                         ? Color(0xffE2E8F0)
                                         : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(9),
+                                    borderRadius: BorderRadius.circular(9),
                                   ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -153,27 +140,21 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                           children: [
                                             Image.asset(
                                               'assets/image/icon1.png',
-                                              color:
-                                                  indeceSelecionado == 1
-                                                      ? Color(0xff1D4ED8)
-                                                      : Color(0xff64748B),
+                                              color: indeceSelecionado == 1
+                                                  ? Color(0xff1D4ED8)
+                                                  : Color(0xff64748B),
                                             ),
                                             SizedBox(width: 8),
                                             Text(
                                               'Livros',
                                               style: TextStyle(
-                                                color:
-                                                    indeceSelecionado ==
-                                                            1
-                                                        ? Color(
-                                                            0xff1D4ED8)
-                                                        : Color(
-                                                            0xff64748B),
+                                                color: indeceSelecionado == 1
+                                                    ? Color(0xff1D4ED8)
+                                                    : Color(0xff64748B),
                                                 fontWeight:
-                                                    indeceSelecionado ==
-                                                            1
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w500,
+                                                    indeceSelecionado == 1
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -183,10 +164,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                       Container(
                                         width: 4,
                                         height: 50,
-                                        color:
-                                            indeceSelecionado == 1
-                                                ? Color(0xff1D4ED8)
-                                                : Colors.transparent,
+                                        color: indeceSelecionado == 1
+                                            ? Color(0xff1D4ED8)
+                                            : Colors.transparent,
                                       ),
                                     ],
                                   ),
@@ -206,11 +186,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                     color: indeceSelecionado == 2
                                         ? Color(0xffE2E8F0)
                                         : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(9),
+                                    borderRadius: BorderRadius.circular(9),
                                   ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -218,27 +196,21 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                           children: [
                                             Image.asset(
                                               'assets/image/icon-2.png',
-                                              color:
-                                                  indeceSelecionado == 2
-                                                      ? Color(0xff1D4ED8)
-                                                      : Color(0xff64748B),
+                                              color: indeceSelecionado == 2
+                                                  ? Color(0xff1D4ED8)
+                                                  : Color(0xff64748B),
                                             ),
                                             SizedBox(width: 8),
                                             Text(
                                               'Alunos',
                                               style: TextStyle(
-                                                color:
-                                                    indeceSelecionado ==
-                                                            2
-                                                        ? Color(
-                                                            0xff1D4ED8)
-                                                        : Color(
-                                                            0xff64748B),
+                                                color: indeceSelecionado == 2
+                                                    ? Color(0xff1D4ED8)
+                                                    : Color(0xff64748B),
                                                 fontWeight:
-                                                    indeceSelecionado ==
-                                                            2
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w500,
+                                                    indeceSelecionado == 2
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -248,10 +220,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                       Container(
                                         width: 4,
                                         height: 50,
-                                        color:
-                                            indeceSelecionado == 2
-                                                ? Color(0xff1D4ED8)
-                                                : Colors.transparent,
+                                        color: indeceSelecionado == 2
+                                            ? Color(0xff1D4ED8)
+                                            : Colors.transparent,
                                       ),
                                     ],
                                   ),
@@ -271,11 +242,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                     color: indeceSelecionado == 3
                                         ? Color(0xffE2E8F0)
                                         : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(9),
+                                    borderRadius: BorderRadius.circular(9),
                                   ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -283,27 +252,21 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                           children: [
                                             Image.asset(
                                               'assets/image/icon-3.png',
-                                              color:
-                                                  indeceSelecionado == 3
-                                                      ? Color(0xff1D4ED8)
-                                                      : Color(0xff64748B),
+                                              color: indeceSelecionado == 3
+                                                  ? Color(0xff1D4ED8)
+                                                  : Color(0xff64748B),
                                             ),
                                             SizedBox(width: 8),
                                             Text(
                                               'Empréstimos',
                                               style: TextStyle(
-                                                color:
-                                                    indeceSelecionado ==
-                                                            3
-                                                        ? Color(
-                                                            0xff1D4ED8)
-                                                        : Color(
-                                                            0xff64748B),
+                                                color: indeceSelecionado == 3
+                                                    ? Color(0xff1D4ED8)
+                                                    : Color(0xff64748B),
                                                 fontWeight:
-                                                    indeceSelecionado ==
-                                                            3
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w500,
+                                                    indeceSelecionado == 3
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -313,10 +276,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                       Container(
                                         width: 4,
                                         height: 50,
-                                        color:
-                                            indeceSelecionado == 3
-                                                ? Color(0xff1D4ED8)
-                                                : Colors.transparent,
+                                        color: indeceSelecionado == 3
+                                            ? Color(0xff1D4ED8)
+                                            : Colors.transparent,
                                       ),
                                     ],
                                   ),
@@ -336,11 +298,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                     color: indeceSelecionado == 4
                                         ? Color(0xffE2E8F0)
                                         : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(9),
+                                    borderRadius: BorderRadius.circular(9),
                                   ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16),
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -348,27 +308,21 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                           children: [
                                             Image.asset(
                                               'assets/image/container.png',
-                                              color:
-                                                  indeceSelecionado == 4
-                                                      ? Color(0xff1D4ED8)
-                                                      : Color(0xff64748B),
+                                              color: indeceSelecionado == 4
+                                                  ? Color(0xff1D4ED8)
+                                                  : Color(0xff64748B),
                                             ),
                                             SizedBox(width: 8),
                                             Text(
                                               'Relatórios',
                                               style: TextStyle(
-                                                color:
-                                                    indeceSelecionado ==
-                                                            4
-                                                        ? Color(
-                                                            0xff1D4ED8)
-                                                        : Color(
-                                                            0xff64748B),
+                                                color: indeceSelecionado == 4
+                                                    ? Color(0xff1D4ED8)
+                                                    : Color(0xff64748B),
                                                 fontWeight:
-                                                    indeceSelecionado ==
-                                                            4
-                                                        ? FontWeight.w700
-                                                        : FontWeight.w500,
+                                                    indeceSelecionado == 4
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w500,
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -378,10 +332,9 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                                       Container(
                                         width: 4,
                                         height: 50,
-                                        color:
-                                            indeceSelecionado == 4
-                                                ? Color(0xff1D4ED8)
-                                                : Colors.transparent,
+                                        color: indeceSelecionado == 4
+                                            ? Color(0xff1D4ED8)
+                                            : Colors.transparent,
                                       ),
                                     ],
                                   ),
@@ -401,9 +354,10 @@ class _NavbarAdminState extends State<NavbarAdmin> {
             ConstrainedBox(
               constraints: BoxConstraints(minWidth: 300),
               child: SizedBox(
-                width: (MediaQuery.of(context).size.width -
-                        larguraMenu)
-                    .clamp(200, double.infinity),
+                width: (MediaQuery.of(context).size.width - larguraMenu).clamp(
+                  200,
+                  double.infinity,
+                ),
                 child: Column(
                   children: [
                     HeaderAdmin(),
